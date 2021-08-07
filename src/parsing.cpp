@@ -14,13 +14,33 @@ std::pair<Unit, std::string::iterator> calculator::parseUnit(std::string::iterat
         ++it;
 
     if (it == endIt)
-        return {Unit(Type::None, SpecificType::None, ""s), it};
+        return {Unit(Type::None, SpecificType::None, nullptr), it};
 
-    auto c = *it;
-    auto unit = Unit(Type::None, SpecificType::None, ""s);
+    auto unit = Unit(Type::None, SpecificType::None, nullptr);
 
-    if (c == '*')
-        unit = Unit(Type::Operation, SpecificType::Multiply, "*"s);
-    
+    if (*it == '*')
+        return {Unit(Type::Operation, SpecificType::Multiply, std::string_view(&*it, 1)), ++it};
+
+    if (*it == '/')
+        return {Unit(Type::Operation, SpecificType::Divide, std::string_view(&*it, 1)), ++it};
+
+    if (*it == '+')
+        return {Unit(Type::Operation, SpecificType::Plus, std::string_view(&*it, 1)), ++it};
+
+    if (*it == '-')
+        return {Unit(Type::Operation, SpecificType::Minus, std::string_view(&*it, 1)), ++it};
+
+    if (*it == '(')
+        return {Unit(Type::Scope, SpecificType::OpenScope, std::string_view(&*it, 1)), ++it};
+
+    if (*it == ')')
+        return {Unit(Type::Scope, SpecificType::CloseScope, std::string_view(&*it, 1)), ++it};
+
+    auto from = it;
+    for (unsigned dotsCount = 0; (*it >= '0' && *it <= '9') || (*it == '.' && ++dotsCount);)
+        ++it;
+
+    // MAKES RETRNS STATEMANTS
+
     return {unit, ++it};
 }

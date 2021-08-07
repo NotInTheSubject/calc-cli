@@ -2,6 +2,8 @@
 #include <iterator>
 #include <vector>
 
+// #include 
+
 using Value = double;
 using input_iterator = std::istream_iterator<char>;
 
